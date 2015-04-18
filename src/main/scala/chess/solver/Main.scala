@@ -24,14 +24,7 @@ object Main extends App {
   }
 
   //  //  7×7 board with 2 Kings, 2 Queens, 2 Bishops and 1 Knight
-  //    val board = new Board(width = 5, height = 6)
-  //    val cases = Seq(Knight, Knight, Queen, Queen, Bishop, Bishop, Knight)
-
-  bench(new Board(width = 3, height = 3), Seq(King, King, Rook))
-
-  bench(new Board(width = 4, height = 4), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
-  //
-  bench(new Board(width = 6, height = 6), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
-
-
+  if (args.nonEmpty) {
+    bench(new Board(width = args(0).toInt, height = args(1).toInt), args.toList.drop(2).map(c => Figures(c.head)))
+  }
 }
