@@ -1,7 +1,7 @@
 package chess.solver
 
 import chess.solver.Figures._
-import chess.solver.board.{Field, Board}
+import chess.solver.board.{FieldFF, Field, Board}
 
 
 object Main extends App {
@@ -14,27 +14,24 @@ object Main extends App {
     result
   }
 
+  def bench(board: Board, cases: Seq[Figure]) = {
+    println(s"${board.width} x ${board.height} ${cases.mkString(",")}")
+    val result = time {
+      Solver(board, cases)
+    }
+    result.foreach(println)
+    println(result.size)
+  }
 
   //  //  7×7 board with 2 Kings, 2 Queens, 2 Bishops and 1 Knight
   //    val board = new Board(width = 5, height = 6)
   //    val cases = Seq(Knight, Knight, Queen, Queen, Bishop, Bishop, Knight)
-  {
-    val board = new Board(width = 3, height = 3)
-    val cases = Seq(King, King, Rook)
-    println(s"3 x 3 ${cases.mkString(",")}")
-    val result = time {
-      Solver(board, cases)
-    }
-    result.foreach(println)
-  }
-  {
-    val board = new Board(width = 4, height = 4)
-    val cases = Seq(Knight, Knight, Knight, Knight, Rook, Rook)
-    println(s"4 x 4 ${cases.mkString(",")}")
-    val result = time {
-      Solver(board, cases)
-    }
-    result.foreach(println)
-  }
+
+  bench(new Board(width = 3, height = 3), Seq(King, King, Rook))
+
+  bench(new Board(width = 4, height = 4), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
+  //
+  //  bench(new Board(width = 6, height = 6), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
+
 
 }
