@@ -33,7 +33,7 @@ object Figures {
     val symbol = 'Q'
 
     def apply(field: Field, board: Board): Set[Field] = {
-      Rook(field, board) ++ Bishop(field, board)
+      (Rook(field, board) ++ Bishop(field, board)).filterNot(_ == field)
     }
   }
 
@@ -46,7 +46,10 @@ object Figures {
       val horizontalMovement = xs map (x => field move(x, 0))
       val verticalMovement = ys map (y => field move(0, y))
 
-      (horizontalMovement ++ verticalMovement).filter(board.checkMoveLegality).toSet
+      (horizontalMovement ++ verticalMovement)
+        .filter(board.checkMoveLegality)
+        .filterNot(_ == field)
+        .toSet
     }
   }
 
@@ -55,11 +58,16 @@ object Figures {
 
     def apply(field: Field, board: Board): Set[Field] = {
       val longerSide = if (board.width > board.height) board.width else board.height
-      val range = -longerSide to longerSide
-      val slashMovement = range map { r => field move(r, r) }
-      val backslashMovement = range map { r => field move(-r, r) }
+      val range = 0 to longerSide
+      val se = range map { r => field move(r, r) }
+      val ne = range map { r => field move(-r, -r) }
+      val sw = range map { r => field move(-r, r) }
+      val nw = range map { r => field move(r, -r) }
 
-      (slashMovement ++ backslashMovement).filter(board.checkMoveLegality).toSet
+      (se ++ ne ++ sw ++ nw)
+        .filter(board.checkMoveLegality)
+        .filterNot(_ == field)
+        .toSet
     }
   }
 
