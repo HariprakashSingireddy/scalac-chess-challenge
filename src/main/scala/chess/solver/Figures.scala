@@ -4,6 +4,16 @@ import chess.solver.board.{Field, Board}
 
 object Figures {
 
+  def apply(c: Char) = {
+    c.toUpper match {
+      case 'K' => King
+      case 'Q' => Queen
+      case 'R' => Rook
+      case 'B' => Bishop
+      case 'N' => Knight
+    }
+  }
+
   sealed trait Figure extends ((Field, Board) => List[Field]) {
     val symbol: Char
 
