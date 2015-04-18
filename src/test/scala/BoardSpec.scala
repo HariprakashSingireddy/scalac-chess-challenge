@@ -15,7 +15,7 @@ class BoardSpec extends FlatSpec with Matchers {
   it should "indicate threatened fields" in {
     board = board.put(King, Field(0, 0)).get
     board.threatenedFields should contain theSameElementsAs
-      Set(Field(0, 1), Field(1, 1), Field(1, 0))
+      Set(Field(0, 1), Field(1, 1), Field(1, 0), Field(0, 0))
   }
 
   it should "invalidate the board if put a invalid figure" in {

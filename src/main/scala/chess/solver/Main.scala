@@ -1,7 +1,7 @@
 package chess.solver
 
 import chess.solver.Figures._
-import chess.solver.board.{FieldFF, Field, Board}
+import chess.solver.board.Board
 
 
 object Main extends App {
@@ -31,7 +31,7 @@ object Main extends App {
 
   bench(new Board(width = 4, height = 4), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
   //
-  //  bench(new Board(width = 6, height = 6), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
+  bench(new Board(width = 6, height = 6), Seq(Knight, Knight, Knight, Knight, Rook, Rook))
 
 
 }
