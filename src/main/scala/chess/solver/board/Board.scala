@@ -4,20 +4,18 @@ import chess.solver.Figures.Figure
 
 class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Figure] = Map.empty) {
 
-  val fields: Set[Field] =
-    (for {
+  val fields =
+    for {
       xd <- 0 to width - 1
       yd <- 0 to height - 1
-    } yield Field(xd, yd)).toSet
+    } yield Field(xd, yd)
 
-  def threatenedFields: Set[Field] = {
+  val threatenedFields = {
     figuresOnFields.flatMap {
       case (field, figure) =>
         figure(field, this)
-    }.toSet
+    } ++ figuresOnFields.keys
   }
-
-  def safeFields: Set[Field] = fields -- threatenedFields -- figuresOnFields.keys
 
   def checkMoveLegality(target: Field): Boolean = {
     val result = 0 <= target.y && target.y < height && 0 <= target.x && target.x < width
@@ -28,7 +26,7 @@ class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Fig
 
     val threatenedByNewFigure = figure(field, this)
 
-    if ((safeFields contains field) && endangersCurrentFigures(threatenedByNewFigure)) {
+    if (!threatenedFields.toList.contains(field) && endangersCurrentFigures(threatenedByNewFigure)) {
       val newField = field -> figure
 
       val board = new Board(width, height, figuresOnFields + newField)
