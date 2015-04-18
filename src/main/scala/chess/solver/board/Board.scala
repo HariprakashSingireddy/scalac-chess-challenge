@@ -38,6 +38,6 @@ class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Fig
   }
 
   def endangersCurrentFigures(threatenedByNewFigure: Set[Field]): Boolean = {
-    !figuresOnFields.keySet.exists(f => threatenedByNewFigure contains f)
+    figuresOnFields.keySet.forall(f => !threatenedByNewFigure.contains(f))
   }
 }
