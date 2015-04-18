@@ -5,7 +5,7 @@ import chess.solver.board._
 import scala.annotation.tailrec
 
 object Solver {
-  def apply(board: Board, figures: Seq[Figures.Figure]) = {
+  def apply(board: Board, figures: Seq[Figures.Figure]): List[List[(Field, Figures.Figure)]] = {
     val combinationCount = Factorial(BigInt(board.fields.size)) / (Factorial(BigInt(figures.size)) * Factorial(BigInt(board.fields.size) - BigInt(figures.size)))
     val withFields = combinationCount * figures.size
 
@@ -26,7 +26,7 @@ object Solver {
           None
       }
 
-    t.flatten
+    t.flatten.toList
   }
 
   //http://stackoverflow.com/a/1187445
