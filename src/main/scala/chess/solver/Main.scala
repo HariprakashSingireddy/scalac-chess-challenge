@@ -22,17 +22,19 @@ object Main extends App {
     val board = new Board(width = 3, height = 3)
     val cases = Seq(King, King, Rook)
     println(s"3 x 3 ${cases.mkString(",")}")
-    time {
+    val result = time {
       Solver(board, cases)
     }
+    result.foreach(println)
   }
   {
     val board = new Board(width = 4, height = 4)
     val cases = Seq(Knight, Knight, Knight, Knight, Rook, Rook)
     println(s"4 x 4 ${cases.mkString(",")}")
-    time {
+    val result = time {
       Solver(board, cases)
     }
+    result.foreach(println)
   }
 
 }

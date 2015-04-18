@@ -29,9 +29,7 @@ object Solver {
           None
       }
 
-    val result = t.flatten
-    result.foreach(println)
-    println(result.size)
+    t.flatten
   }
 
   //http://stackoverflow.com/a/1187445
