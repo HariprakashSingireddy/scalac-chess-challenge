@@ -1,6 +1,5 @@
 package chess.solver
 
-
 //from http://rosettacode.org/wiki/Combinations#Scala
 object Combinations {
 

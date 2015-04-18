@@ -1,7 +1,5 @@
 package chess.solver.board
 
-
-
 case class Field(x: Int, y: Int) {
   def move(movementVector: (Int, Int)) = {
 
