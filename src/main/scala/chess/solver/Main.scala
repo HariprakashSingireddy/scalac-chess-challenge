@@ -16,6 +16,9 @@ object Main extends App {
 
   def bench(board: Board, cases: Seq[Figure]) = {
     println(s"${board.width} x ${board.height} ${cases.mkString(",")}")
+    println("Press any key to start")
+
+    System.in.read
     val result = time {
       Solver(board, cases)
     }
