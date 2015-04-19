@@ -31,8 +31,12 @@ class Board(
 
   val safeFields = fields.filter(f => !threatenedFields.toSeq.contains(f)).toList
 
-  def putOnFirstSafe(figure: Figure): List[Board] = {
-    safeFields.flatMap(put(figure, _))
+  def putOnFirstSafe(figure: Figure, remainingFigures: Int): List[Board] = {
+    //small optimization, if there is less fields than remaining figures, this branch is already invalid
+    if (safeFields.size < remainingFigures)
+      Nil
+    else
+      safeFields.flatMap(put(figure, _))
   }
 
   def put(figure: Figure, field: Field): Option[Board] = {

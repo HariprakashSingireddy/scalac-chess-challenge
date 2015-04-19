@@ -17,9 +17,6 @@ class BoardSpec extends FlatSpec with Matchers {
     board.threatenedFields should contain theSameElementsAs
       Set(Field(0, 1), Field(1, 1), Field(1, 0), Field(0, 0))
 
-    List(Field(0,-1), Field(0,1), Field(1,-1), Field(1,0), Field(1,1), Field(-1,-1), Field(-1,0), Field(-1,1), Field(0,0))
-    List(Field(0,1), Field(1,1), Field(1,0), Field(0,0))
-
   }
 
   it should "invalidate the board if put a invalid figure" in {
