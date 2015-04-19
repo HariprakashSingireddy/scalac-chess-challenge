@@ -19,7 +19,7 @@ object Main extends App {
     val result = time {
       Solver(board, cases)
     }
-    result.foreach(println)
+//    result.foreach(println)
     println(result.size)
   }
 

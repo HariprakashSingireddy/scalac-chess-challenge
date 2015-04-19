@@ -2,6 +2,8 @@ package chess.solver.board
 
 import chess.solver.Figures.Figure
 
+
+
 class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Figure] = Map.empty) {
 
   val fields =
@@ -20,6 +22,13 @@ class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Fig
   def checkMoveLegality(target: Field): Boolean = {
     val result = 0 <= target.y && target.y < height && 0 <= target.x && target.x < width
     result
+  }
+
+  val safeFields = fields.filter(f => !threatenedFields.toSeq.contains(f)).toList
+
+  def putOnFirstSafe(figure: Figure): List[Board] = {
+
+    safeFields.flatMap(put(figure, _))
   }
 
   def put(figure: Figure, field: Field): Option[Board] = {

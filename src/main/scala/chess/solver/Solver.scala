@@ -3,31 +3,22 @@ package chess.solver
 import chess.solver.board._
 
 import scala.annotation.tailrec
+import scala.collection.parallel.ParSeq
 
 object Solver {
-  def apply(board: Board, figures: Seq[Figures.Figure]): List[List[(Field, Figures.Figure)]] = {
-    val combinationCount = Factorial(BigInt(board.fields.size)) / (Factorial(BigInt(figures.size)) * Factorial(BigInt(board.fields.size) - BigInt(figures.size)))
-    val withFields = combinationCount * figures.size
+  def apply(board: Board, figures: Seq[Figures.Figure]): ParSeq[Map[Field, Figures.Figure]] = {
+    val sortedFigures = figures.sortBy(-_.influence)
 
-    val figureCombinations = figures.permutations.toParArray
+    val generation1 = board.putOnFirstSafe(sortedFigures.head).par
 
-    val fieldCombinations = Combinations.combs(figures.size, board.fields.toList)
-
-    val t = for {
-      figureCombination <- figureCombinations
-      fieldCombination <- fieldCombinations
-    } yield {
-
-        val c = fieldCombination.zip(figureCombination)
-        if (checkFiguresOnBoard(board, c)) {
-          Some(c)
-        }
-        else
-          None
-      }
-
-    t.flatten.toList
+    val r = sortedFigures.tail
+    val w = r.foldLeft(generation1) {
+      case (gen, f) =>
+        gen.flatMap(_.putOnFirstSafe(f))
+    }
+    w.map(_.figuresOnFields).distinct
   }
+
 
   //http://stackoverflow.com/a/1187445
   object Factorial {

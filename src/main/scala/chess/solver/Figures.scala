@@ -16,12 +16,14 @@ object Figures {
 
   sealed trait Figure extends ((Field, Board) => List[Field]) {
     val symbol: Char
+    val influence: Int
 
     override def toString() = symbol.toString
   }
 
   object King extends Figure {
     val symbol = 'K'
+    val influence = 1
 
     def apply(field: Field, board: Board): List[Field] = {
       List(
@@ -41,6 +43,7 @@ object Figures {
 
   object Queen extends Figure {
     val symbol = 'Q'
+    val influence = 5
 
     def apply(field: Field, board: Board): List[Field] = {
       (Rook(field, board) ++ Bishop(field, board)).filterNot(_ == field)
@@ -49,6 +52,7 @@ object Figures {
 
   object Rook extends Figure {
     val symbol = 'R'
+    val influence = 3
 
     def apply(field: Field, board: Board): List[Field] = {
       val xs = -(board.width - 1) to board.width - 1
@@ -65,6 +69,8 @@ object Figures {
 
   object Bishop extends Figure {
     val symbol = 'B'
+
+    val influence = 4
 
     def apply(field: Field, board: Board): List[Field] = {
       val longerSide = if (board.width > board.height) board.width else board.height
@@ -83,6 +89,7 @@ object Figures {
 
   object Knight extends Figure {
     val symbol = 'N'
+    val influence = 2
 
     def apply(field: Field, board: Board): List[Field] = {
       List(
