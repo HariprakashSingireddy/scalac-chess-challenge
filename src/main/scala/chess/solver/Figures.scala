@@ -14,7 +14,7 @@ object Figures {
     }
   }
 
-  sealed trait Figure extends ((Field, Board) => List[Field]) {
+  sealed trait Figure extends (Field => List[Field]) {
     val symbol: Char
     val influence: Int
 
@@ -25,19 +25,19 @@ object Figures {
     val symbol = 'K'
     val influence = 1
 
-    def apply(field: Field, board: Board): List[Field] = {
+    def apply(field: Field): List[Field] = {
       List(
-        field move(0, -1),
-        field move(0, 1),
+        field(0, -1),
+        field(0, 1),
 
-        field move(1, -1),
-        field move(1, 0),
-        field move(1, 1),
+        field(1, -1),
+        field(1, 0),
+        field(1, 1),
 
-        field move(-1, -1),
-        field move(-1, 0),
-        field move(-1, 1)
-      ).filter(board.checkMoveLegality)
+        field(-1, -1),
+        field(-1, 0),
+        field(-1, 1))
+
     }
   }
 
@@ -45,8 +45,8 @@ object Figures {
     val symbol = 'Q'
     val influence = 5
 
-    def apply(field: Field, board: Board): List[Field] = {
-      (Rook(field, board) ++ Bishop(field, board)).filterNot(_ == field)
+    def apply(field: Field): List[Field] = {
+      (Rook(field) ++ Bishop(field)).filterNot(_ == field)
     }
   }
 
@@ -54,14 +54,13 @@ object Figures {
     val symbol = 'R'
     val influence = 3
 
-    def apply(field: Field, board: Board): List[Field] = {
-      val xs = -(board.width - 1) to board.width - 1
-      val ys = -(board.height - 1) to board.height - 1
-      val horizontalMovement = xs map (x => field move(x, 0))
-      val verticalMovement = ys map (y => field move(0, y))
+    def apply(field: Field): List[Field] = {
+      val xs = -7 to 7
+      val ys = -7 to 7
+      val horizontalMovement = xs map (x => field(x, 0))
+      val verticalMovement = ys map (y => field(0, y))
 
       (horizontalMovement ++ verticalMovement)
-        .filter(board.checkMoveLegality)
         .filterNot(_ == field)
         .toList
     }
@@ -72,16 +71,14 @@ object Figures {
 
     val influence = 4
 
-    def apply(field: Field, board: Board): List[Field] = {
-      val longerSide = if (board.width > board.height) board.width else board.height
-      val range = 0 to longerSide
-      val se = range map { r => field move(r, r) }
-      val ne = range map { r => field move(-r, -r) }
-      val sw = range map { r => field move(-r, r) }
-      val nw = range map { r => field move(r, -r) }
+    def apply(field: Field): List[Field] = {
+      val range = 0 to 7
+      val se = range map { r => field(r, r) }
+      val ne = range map { r => field(-r, -r) }
+      val sw = range map { r => field(-r, r) }
+      val nw = range map { r => field(r, -r) }
 
       (se ++ ne ++ sw ++ nw)
-        .filter(board.checkMoveLegality)
         .filterNot(_ == field)
         .toList
     }
@@ -91,20 +88,20 @@ object Figures {
     val symbol = 'N'
     val influence = 2
 
-    def apply(field: Field, board: Board): List[Field] = {
+    def apply(field: Field): List[Field] = {
       List(
-        field move(2, 1),
-        field move(2, -1),
+        field(2 -> 1),
+        field(2, -1),
 
-        field move(1, 2),
-        field move(-1, 2),
+        field(1, 2),
+        field(-1, 2),
 
-        field move(-2, 1),
-        field move(-2, -1),
+        field(-2, 1),
+        field(-2, -1),
 
-        field move(1, -2),
-        field move(-1, -2)
-      ).filter(board.checkMoveLegality)
+        field(1, -2),
+        field(-1, -2)
+      )
     }
   }
 

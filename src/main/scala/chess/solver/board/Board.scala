@@ -15,7 +15,7 @@ class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Fig
   val threatenedFields = {
     figuresOnFields.flatMap {
       case (field, figure) =>
-        figure(field, this)
+        figure(field)
     } ++ figuresOnFields.keys
   }
 
@@ -33,7 +33,7 @@ class Board(val width: Int, val height: Int, val figuresOnFields: Map[Field, Fig
 
   def put(figure: Figure, field: Field): Option[Board] = {
 
-    val threatenedByNewFigure = figure(field, this)
+    val threatenedByNewFigure = figure(field).filter(checkMoveLegality)
 
     if (!threatenedFields.toList.contains(field) && endangersCurrentFigures(threatenedByNewFigure)) {
       val newField = field -> figure
