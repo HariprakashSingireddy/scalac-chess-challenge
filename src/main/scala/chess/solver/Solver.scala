@@ -14,7 +14,7 @@ object Solver {
   }
 
   @tailrec
-  def exploreBranch(branches: ParSeq[Board], remainingFigures: Seq[Figures.Figure]): ParSeq[Board] = {
+  private def exploreBranch(branches: ParSeq[Board], remainingFigures: Seq[Figures.Figure]): ParSeq[Board] = {
     if (remainingFigures.nonEmpty) {
       val branched = branches.flatMap(_.createPossibleBranches(remainingFigures.head, remainingFigures.size)).distinct
       exploreBranch(branched, remainingFigures.tail)
@@ -22,5 +22,4 @@ object Solver {
     else
       branches
   }
-
 }

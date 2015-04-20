@@ -2,56 +2,51 @@ package chess.solver.board
 
 import chess.solver.Figures.Figure
 
-class Board(
-             val width: Int,
-             val height: Int,
-             val figuresOnFields: Map[Field, Figure] = Map.empty,
-             currentFields: List[Field] = Nil) {
+object Board {
+  var allFields: Set[Field] = Set()
 
-  val fields: List[Field] =
-    if (currentFields.isEmpty)
-      ( for {
-        xd <- 0 to width - 1
-        yd <- 0 to height - 1
-      } yield Field(xd, yd)).toList
-    else
-      currentFields
+  def apply(width: Int,
+            height: Int,
+            figuresOnFields: Map[Field, Figure] = Map.empty): Board = {
 
-  def threatenedFields = {
-    figuresOnFields.flatMap {
-      case (field, figure) =>
-        figure(field, fields).filter(inbound)
-    } ++ figuresOnFields.keys
+    allFields = (for {
+      xd <- 0 to width - 1
+      yd <- 0 to height - 1
+    } yield Field(xd, yd)).toSet
+
+    new Board(width, height, allFields, Map.empty)
   }
 
-  def inbound(target: Field): Boolean = {
-    0 <= target.y && target.y < height && 0 <= target.x && target.x < width
-  }
+}
 
-  val safeFields = fields.filter(f => !threatenedFields.toSeq.contains(f)).toList
+case class Board(
+                  width: Int,
+                  height: Int,
+                  fields: Set[Field],
+                  figuresOnFields: Map[Field, Figure]) {
 
-  def createPossibleBranches(figure: Figure, remainingFigures: Int): List[Board] = {
+  def createPossibleBranches(figure: Figure, remainingFigures: Int): Set[Board] = {
     //small optimization, if there is less fields than remaining figures, this branch is already invalid
-    if (safeFields.size < remainingFigures)
-      Nil
+    if (fields.size < remainingFigures)
+      Set()
     else
-      safeFields.flatMap(createBranch(figure, _))
+      fields.flatMap(createBranch(figure, _))
   }
 
   def createBranch(figure: Figure, field: Field): Option[Board] = {
 
-    val threatenedByNewFigure = figure(field, fields).filter(inbound)
-
-    if (!threatenedFields.toList.contains(field) && endangersCurrentFigures(threatenedByNewFigure)) {
+    val threatenedByNewFigure = figure(field, Board.allFields)
+    val endangered = endangersCurrentFigures(threatenedByNewFigure)
+    if (fields.contains(field) && endangered.isEmpty) {
       val newField = field -> figure
 
-      val board = new Board(width, height, figuresOnFields + newField, safeFields)
+      val board = Board(width, height, fields -- threatenedByNewFigure, figuresOnFields + newField)
       Some(board)
     } else
       None
   }
 
-  def endangersCurrentFigures(threatenedByNewFigure: List[Field]): Boolean = {
-    figuresOnFields.keySet.forall(f => !threatenedByNewFigure.contains(f))
+  private def endangersCurrentFigures(threatenedByNewFigure: Set[Field]): Set[Field] = {
+    figuresOnFields.keySet.intersect(threatenedByNewFigure)
   }
 }

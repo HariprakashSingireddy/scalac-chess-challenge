@@ -14,16 +14,14 @@ object Figures {
     }
   }
 
-  sealed trait Figure extends ((Field, List[Field]) => List[Field]) {
+  sealed trait Figure extends ((Field, Set[Field]) => Set[Field]) {
     val symbol: Char
     val influence: Int
 
     def filter(current: Field, checked: Field): Boolean
 
-    def apply(field: Field, available: List[Field]): List[Field] = {
-      available.filter { checkedField =>
-        checkedField != field && filter(field, checkedField)
-      }
+    def apply(field: Field, available: Set[Field]): Set[Field] = {
+      available.filter { checkedField => filter(field, checkedField) }
     }
 
     override def toString() = symbol.toString
@@ -34,7 +32,7 @@ object Figures {
     val influence = 1
 
     def filter(current: Field, checked: Field) = {
-      Math.abs(current.x - checked.x) <= 1 && Math.abs(current.y -  checked.y) <= 1
+      Math.abs(current.x - checked.x) <= 1 && Math.abs(current.y - checked.y) <= 1
     }
   }
 
@@ -43,8 +41,8 @@ object Figures {
     val influence = 5
 
     def filter(current: Field, checked: Field): Boolean = {
-      current.x ==  checked.x || current.y ==  checked.y ||
-        Math.abs(current.x -  checked.x) == Math.abs(current.y -  checked.y)
+      current.x == checked.x || current.y == checked.y ||
+        Math.abs(current.x - checked.x) == Math.abs(current.y - checked.y)
     }
   }
 
@@ -53,7 +51,7 @@ object Figures {
     val influence = 3
 
     def filter(current: Field, checked: Field): Boolean = {
-      current.x ==  checked.x || current.y ==  checked.y
+      current.x == checked.x || current.y == checked.y
     }
   }
 
@@ -63,7 +61,7 @@ object Figures {
     val influence = 4
 
     override def filter(current: Field, checked: Field): Boolean = {
-      Math.abs(current.x -  checked.x) == Math.abs(current.y -  checked.y)
+      Math.abs(current.x - checked.x) == Math.abs(current.y - checked.y)
     }
   }
 
@@ -72,8 +70,8 @@ object Figures {
     val influence = 2
 
     override def filter(current: Field, checked: Field): Boolean = {
-      (Math.abs(current.x -  checked.x) == 1 && Math.abs(current.y -  checked.y) == 2) ||
-        (Math.abs(current.x -  checked.x) == 2 && Math.abs(current.y -  checked.y) == 1)
+      (Math.abs(current.x - checked.x) == 1 && Math.abs(current.y - checked.y) == 2) ||
+        (Math.abs(current.x - checked.x) == 2 && Math.abs(current.y - checked.y) == 1)
     }
   }
 
