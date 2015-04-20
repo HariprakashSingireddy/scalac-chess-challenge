@@ -20,28 +20,27 @@ class Board(
   def threatenedFields = {
     figuresOnFields.flatMap {
       case (field, figure) =>
-        figure(field).filter(checkMoveLegality)
+        figure(field).filter(inbound)
     } ++ figuresOnFields.keys
   }
 
-  def checkMoveLegality(target: Field): Boolean = {
-    val result = 0 <= target.y && target.y < height && 0 <= target.x && target.x < width
-    result
+  def inbound(target: Field): Boolean = {
+    0 <= target.y && target.y < height && 0 <= target.x && target.x < width
   }
 
   val safeFields = fields.filter(f => !threatenedFields.toSeq.contains(f)).toList
 
-  def putOnFirstSafe(figure: Figure, remainingFigures: Int): List[Board] = {
+  def createPossibleBranches(figure: Figure, remainingFigures: Int): List[Board] = {
     //small optimization, if there is less fields than remaining figures, this branch is already invalid
     if (safeFields.size < remainingFigures)
       Nil
     else
-      safeFields.flatMap(put(figure, _))
+      safeFields.flatMap(createBranch(figure, _))
   }
 
-  def put(figure: Figure, field: Field): Option[Board] = {
+  def createBranch(figure: Figure, field: Field): Option[Board] = {
 
-    val threatenedByNewFigure = figure(field).filter(checkMoveLegality)
+    val threatenedByNewFigure = figure(field).filter(inbound)
 
     if (!threatenedFields.toList.contains(field) && endangersCurrentFigures(threatenedByNewFigure)) {
       val newField = field -> figure

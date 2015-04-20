@@ -7,7 +7,7 @@ class FigureSpec extends FlatSpec with Matchers {
   val board = new Board(3, 3)
 
   implicit class RichList(fields: List[Field]) {
-    def filterByBound = fields.filter(board.checkMoveLegality)
+    def filterByBound = fields.filter(board.inbound)
   }
 
   behavior of "The King"

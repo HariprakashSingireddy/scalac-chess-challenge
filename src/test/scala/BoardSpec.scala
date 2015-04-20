@@ -13,7 +13,7 @@ class BoardSpec extends FlatSpec with Matchers {
   }
 
   it should "indicate threatened fields" in {
-    board = board.put(King, Field(0, 0)).get
+    board = board.createBranch(King, Field(0, 0)).get
     board.threatenedFields should contain theSameElementsAs
       Set(Field(0, 1), Field(1, 1), Field(1, 0), Field(0, 0))
 
@@ -21,8 +21,8 @@ class BoardSpec extends FlatSpec with Matchers {
 
   it should "invalidate the board if put a invalid figure" in {
     val boardOpt = for {
-      boardWithKing <- board.put(King, Field(0, 1))
-      boardWith2Kings <- boardWithKing.put(King, Field(0, 0))
+      boardWithKing <- board.createBranch(King, Field(0, 1))
+      boardWith2Kings <- boardWithKing.createBranch(King, Field(0, 0))
     } yield boardWith2Kings
 
     boardOpt should be('empty)
