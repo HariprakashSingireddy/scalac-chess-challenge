@@ -8,19 +8,19 @@ class Board(
              val figuresOnFields: Map[Field, Figure] = Map.empty,
              currentFields: List[Field] = Nil) {
 
-  val fields =
+  val fields: List[Field] =
     if (currentFields.isEmpty)
-      for {
+      ( for {
         xd <- 0 to width - 1
         yd <- 0 to height - 1
-      } yield Field(xd, yd)
+      } yield Field(xd, yd)).toList
     else
       currentFields
 
   def threatenedFields = {
     figuresOnFields.flatMap {
       case (field, figure) =>
-        figure(field).filter(inbound)
+        figure(field, fields).filter(inbound)
     } ++ figuresOnFields.keys
   }
 
@@ -40,7 +40,7 @@ class Board(
 
   def createBranch(figure: Figure, field: Field): Option[Board] = {
 
-    val threatenedByNewFigure = figure(field).filter(inbound)
+    val threatenedByNewFigure = figure(field, fields).filter(inbound)
 
     if (!threatenedFields.toList.contains(field) && endangersCurrentFigures(threatenedByNewFigure)) {
       val newField = field -> figure
