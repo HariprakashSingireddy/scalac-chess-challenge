@@ -17,7 +17,7 @@ class Board(
     else
       currentFields
 
-  val threatenedFields = {
+  def threatenedFields = {
     figuresOnFields.flatMap {
       case (field, figure) =>
         figure(field).filter(checkMoveLegality)

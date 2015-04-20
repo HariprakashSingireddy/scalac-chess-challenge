@@ -5,21 +5,13 @@ import chess.solver.board.Board
 
 
 object Main extends App {
-  def time[R](block: => R): R = {
-    val t0 = System.nanoTime()
-    val result = block // call-by-name
-    val t1 = System.nanoTime()
-
-    println(s"Elapsed time: ${(t1 - t0) / 1000000000.0} s")
-    result
-  }
 
   def bench(board: Board, cases: Seq[Figure]) = {
     println(s"${board.width} x ${board.height} ${cases.mkString(",")}")
     println("Press any key to start")
 
     System.in.read
-    val result = time {
+    val result = Timer {
       Solver(board, cases)
     }
 //    result.foreach(println)

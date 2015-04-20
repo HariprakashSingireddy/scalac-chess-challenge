@@ -1,6 +1,6 @@
 package chess.solver
 
-import chess.solver.board.{Field, Board}
+import chess.solver.board.Field
 
 object Figures {
 
