@@ -90,7 +90,7 @@ object Figures {
 
     def apply(field: Field): List[Field] = {
       List(
-        field(2 -> 1),
+        field(2, 1),
         field(2, -1),
 
         field(1, 2),
